@@ -1,55 +1,33 @@
-import os
+def isPrime(x): # Create a function to check if x > 1 is prime
+    factors = 0
+    for n in range(1,x+1):
+        if x%n == 0:
+            factors += 1
+        if factors > 2:
+            return False
+    return True
 
-# First let us check if primes.csv exists, we need to make it, if not
-if not os.path.exists("primes.csv"):
-    f = open("primes.csv","w")
-    f.write("primes")
+try: # Open the file (if it exists)
+    f = open("primes.csv","r")
+    for line in f.readlines():     # I'm getting the LAST int in the file
+        start = 1+(int(line.replace("\n","")))
     f.close()
-    print("Creating primes.csv file.")
+except FileNotFoundError: # Create the file (if does not exist)
+    f = open("primes.csv", "x")
+    start = 2 # first prime
+    f.close()
 
-def isPrime(n):
-    # SLOW NAIVE SCHOOL METHOD (EASY BUT SLOW)
-    numberOfFactors = 0
-    # Checking how many factors n has
-    for m in range(1,n+1):
-        if n%m == 0: # This means m is a FACTOR of n so it CAN'T BE PRIME
-            numberOfFactors += 1
-    # Primes have 2 factors only
-    if numberOfFactors == 2:
-        return True
-    else:
-        return False
-
-# Get the last entry from the file
-last = ""
-f = open("primes.csv","r")
-for row in f:
-    last = row
+# Add to the file
+x = start
+want = 1000
+make = 0
+f = open("primes.csv","a") # APPEND (add) to the file
+while make < 1000:
+    if isPrime(x):
+        if not x == 2:
+            f.write("\n"+str(x))
+        else:
+            f.write(str(x))
+        make += 1
+    x += 1
 f.close()
-
-# Open File
-f = open("primes.csv","a")
-
-
-# Check where I need to start
-if last == "primes":
-    n = 1
-else:
-    n = int(last)+1
-
-# Generate Primes into CSV
-numberOfPrimes = 0
-while True:
-    if isPrime(n):
-        f.write("\n"+str(n))
-        numberOfPrimes += 1
-
-    if numberOfPrimes == 1000:
-        break
-
-    n += 1
-
-# Done
-f.close()
-print("DONE")
-quit()
